@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Quiz App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #main {
+            background-color: white;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #23837f;
+            flex-shrink: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Inter', sans-serif;
+            font-size: 17px;
+            font-style: normal;
+            font-weight: 400;
+            color: white;
+        }
+
+        section {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #content {
+            border: 2px solid #a7a7a7;
+            box-shadow: 6px 4px 5px #a7a7a7;
+            border-radius: 15px;
+            padding: 40px 30px;
+            margin: 0px 10px;
+        }
+
+        #content #heading {
+            font-family: Manrope;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: bold;
+            color: black;
+            margin: 20px 0px;
+        }
+
+        #content #heading1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 17px;
+            color: black;
+            font-style: normal;
+            font-weight: 400;
+            margin: 20px 0px;
+        }
+
+        #content button {
+            background-color: #23837f;
+            border: 1px solid #23837f;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            margin: 5px 0px;
+            cursor: pointer;
+        }
+
+        #content input {
+            width: 90px;
+            height: 35px;
+            margin: 10px;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <header>
+            <div style="cursor: pointer;" onclick="getScreen('highscore')">View Highscores <span><i
+                        class="fas fa-hand-point-left fa-lg"></i></span>
+            </div>
+            <div id="timer">Time:<span id="time"></span></div>
+        </header>
+        <section>
+            <div id="content">
+            </div>
+        </section>
+    </div>
+    <script>
+        let screen = 'startquiz';
+        let timer = 30;
+        let score = 0;
+        let content = document.getElementById('content');
+        let highscoredata = []
+        let getQNAData = [
+            {
+                question: `1. How do you write 'Hello World' in an alert box?`,
+                options: [`msg('Hello World')`, `msgBox('Hello World')`, `alertBox('Hello World')`, `alert('Hello World')`],
+                answer: 3
+            }, {
+                question: `2. How to empty an array in JavaScript?`,
+                options: [`arrayList[]`, `arrayList(0)`, `arrayList.length=0`, `arrayList.len(0)`],
+                answer: 2
+            }, {
+                question: `3. What function to add an element at the begining of an array and one at the end?`,
+                options: [`push,unshift`, `unshift,push`, `first,push`, `unshift,last`],
+                answer: 1
+            }, {
+                question: `4. What will this output? var a = [1, 2, 3]; console.log(a[6])?`,
+                options: [`undefined`, `0`, `prints nothing`, `Syntax error`],
+                answer: 0
+            }, {
+                question: `5. What would following code return? console.log(typeof typeof 1)?`,
+                options: [`string`, `number`, `Syntax error`, `undefined`],
+                answer: 0
+            }, {
+                question: `6. Which software company developed JavaScript?`,
+                options: [`Mozilla`, `Netscape`, `Sun Microsystems`, `Oracle`],
+                answer: 1
+            }, {
+                question: `7. What would be the result of 3+2+'7'?`,
+                options: [`327`, `12`, `14`, `57`],
+                answer: 3
+            }, {
+                question: `8. Look at the following selector: $('div'). What does it select?`,
+                options: [`The first div element`, `The last div element`, `All div elements`, `Current div element`],
+                answer: 2
+            }, {
+                question: `9. How can a value be appended to an array?`,
+                options: [`arr(length).value;`, `arr[arr.length]=value;`, `arr[]=add(value);`, `None of these`],
+                answer: 1
+            }, {
+                question: `10. What will the code below output to the console? console.log(1 +  +'2' + '2');`,
+                options: [`'32'`, `'122'`, `'13'`, `'14'`],
+                answer: 0
+            }
+        ]
+        function getScreen(screenname) {
+            content.innerHTML = "";
+            if (screenname === 'startquiz') {
+                let heading = document.createElement('div');
+                let heading1 = document.createElement('div');
+                let heading2 = document.createElement('div');
+                let button = document.createElement('button');
+                heading.setAttribute('id', 'heading');
+                heading1.setAttribute('id', 'heading1');
+                heading2.setAttribute('id', 'heading1');
+                heading.innerText = 'Coding Quiz Challenge';
+                heading1.innerText = 'Try to answer the following code-related questions within the time limit.';
+                heading2.innerText = 'Keep in mind that incorrect answers will penalize your score/time by ten seconds.';
+                button.innerText = 'Start Quiz';
+                button.addEventListener('click', () => getScreen('qna'));
+                content.appendChild(heading);
+                content.appendChild(heading1);
+                content.appendChild(heading2);
+                content.appendChild(button);
+            } else if (screenname === 'highscore') {
+                let heading = document.createElement('div');
+                heading.setAttribute('id', 'heading');
+                heading.innerText = "Highscores";
+                content.appendChild(heading);
+                if (highscoredata.length === 0) {
+                    let heading1 = document.createElement('div');
+                    heading1.setAttribute('id', 'heading1');
+                    heading1.style.marginLeft = '20px';
+                    heading1.innerHTML = 'No Records';
+                    content.appendChild(heading1);
+                } else {
+                    highscoredata.map((item, i) => {
+                        let heading1 = document.createElement('div');
+                        heading1.setAttribute('id', 'heading1');
+                        heading1.style.marginLeft = '20px';
+                        heading1.innerHTML = `${i + 1}. ${item.initial} - ${item.score}`
+                        content.appendChild(heading1);
+                    })
+                }
+                let divBtn = document.createElement('div');
+                divBtn.style.display = 'flex';
+
+                let button1 = document.createElement('button');
+                button1.innerText = 'Go Back';
+                button1.addEventListener('click', () => getScreen('startquiz'));
+
+                let button2 = document.createElement('button');
+                button2.style.marginLeft = '20px';
+                button2.innerText = 'Clear Highscores';
+                button2.addEventListener('click', () => {
+                    highscoredata.length = 0;
+                    getScreen('highscore');
+                });
+
+                divBtn.appendChild(button1);
+                divBtn.appendChild(button2);
+                content.appendChild(divBtn);
+            } else if (screenname === 'qna') {
+                timer = 30;
+                let startTimer = setInterval(() => {
+                    if (timer <= 0) {
+                        clearInterval(startTimer);
+                        getScreen('alldone');
+                    }
+                    document.getElementById('time').innerText = timer;
+                    --timer;
+                }, 1000)
+                function showQNA(index) {
+                    content.innerHTML = "";
+                    let heading = document.createElement('div');
+                    heading.setAttribute('id', 'heading');
+                    heading.innerText = getQNAData[index].question;
+                    content.appendChild(heading);
+
+                    getQNAData[index].options.map((item, optionIndex) => {
+                        let button = document.createElement('button');
+                        button.style.width = '100%';
+                        button.style.textAlign = 'left';
+                        button.innerText = `${optionIndex + 1}. ${item}`;
+                        button.addEventListener('click', () => {
+                            if (optionIndex === getQNAData[index].answer) {
+                                ++score;
+                                console.log("score", optionIndex, score);
+                            } else {
+                                timer = timer <= 10 ? 0 : timer - 10;
+                            }
+                            if (index === getQNAData.length - 1) {
+                                clearInterval(startTimer);
+                                return getScreen('alldone');
+                            } else {
+                                return showQNA(index + 1);
+                            }
+                        })
+                        content.appendChild(button);
+                    })
+                }
+                showQNA(0)
+            } else if (screenname === 'alldone') {
+                let heading = document.createElement('div');
+                heading.setAttribute('id', 'heading');
+                heading.innerText = "All done!";
+                content.appendChild(heading);
+                let heading1 = document.createElement('div');
+                heading1.setAttribute('id', 'heading1');
+                heading1.innerText = `Your final score is ${score}.`;
+                content.appendChild(heading1);
+                let nameField = document.createElement('div');
+                nameField.style.margin = '20px 0px';
+                nameField.style.display = 'flex';
+                nameField.style.alignItems = 'center';
+                let heading2 = document.createElement('div');
+                heading2.setAttribute('id', 'heading1');
+                heading2.style.margin = '0px'
+                heading2.innerText = 'Enter initials:'
+                nameField.appendChild(heading2);
+                let input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('id', 'myText');
+                nameField.appendChild(input);
+                let button = document.createElement('button');
+                button.innerText = "Submit";
+                button.style.pointerEvents = 'none';
+                input.addEventListener('keyup', (evt) => {
+                    button.style.pointerEvents = 'unset';
+                });
+                button.addEventListener('click', () => {
+                    highscoredata.push({ initial: input.value, score: score });
+                    timer = 0;
+                    score = 0;
+                    document.getElementById('time').innerText = timer;
+                    getScreen('highscore');
+                })
+                nameField.appendChild(button);
+                content.appendChild(nameField);
+            }
+        }
+        getScreen('startquiz');
+    </script>
+</body>
+
+</html>
