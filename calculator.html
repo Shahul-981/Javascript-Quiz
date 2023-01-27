@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #main {
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(to right, #00b4ed, #00f37f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #calcMain {
+            height: 70vh;
+            width: 320px;
+            background-color: #bff4ed;
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            font-family: Manrope;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 400;
+            color: #263646;
+        }
+
+        #input {
+            background-color: #00362d;
+            color: white;
+            font-family: Manrope;
+            font-size: 24px;
+            font-style: normal;
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            padding: 10px;
+        }
+
+        #field1 {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+        }
+
+        #field2 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        #field3 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        #field4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        #field5 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr;
+        }
+
+        #field1 #ac,
+        #field1 #del,
+        #field1 #divi,
+        #field2 #one,
+        #field2 #two,
+        #field2 #three,
+        #field2 #mul,
+        #field3 #four,
+        #field3 #five,
+        #field3 #six,
+        #field3 #add,
+        #field4 #seven,
+        #field4 #eight,
+        #field4 #nine,
+        #field4 #sub,
+        #field5 #dot,
+        #field5 #zero,
+        #field5 #equalto {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 2px solid white;
+            border-bottom: 2px solid white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <div id="calcMain">
+            <div id="input"></div>
+            <div id="field1">
+                <div id="ac">AC</div>
+                <div id="del">DEL</div>
+                <div id="divi" data-val="arth">&divide;</div>
+            </div>
+            <div id="field2">
+                <div id="one">1</div>
+                <div id="two">2</div>
+                <div id="three">3</div>
+                <div id="mul" data-val="arth">*</div>
+            </div>
+            <div id="field3">
+                <div id="four">4</div>
+                <div id="five">5</div>
+                <div id="six">6</div>
+                <div id="add" data-val="arth">+</div>
+            </div>
+            <div id="field4">
+                <div id="seven">7</div>
+                <div id="eight">8</div>
+                <div id="nine">9</div>
+                <div id="sub">-</div>
+            </div>
+            <div id="field5">
+                <div id="dot">.</div>
+                <div id="zero">0</div>
+                <div id="equalto">=</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let strVal = '';
+        let input = document.getElementById('input')
+        document.getElementById('calcMain').addEventListener('click', (evt) => {
+            if (evt.target.id === 'equalto') {
+                strVal = eval(strVal).toString();
+            } else if(evt.target.id === 'ac' || evt.target.id === 'del' || 
+            (evt.target.dataset.val === 'arth' && input.innerText === '')) {
+                strVal = '';
+            } else if((evt.target.innerText === strVal.slice(-1)) || (strVal.slice(-1) === '.' && evt.target.dataset.val === 'arth')) {
+                strVal = strVal;
+            } else {
+                strVal += evt.target.id === "divi" ? '/' : evt.target.innerText;
+            }
+            input.innerText = strVal;
+        });
+    </script>
+</body>
+
+</html>
